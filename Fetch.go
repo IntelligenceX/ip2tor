@@ -30,11 +30,13 @@ func startDownloadDaemon(exitOnly bool, waitTime time.Duration, filename string,
 		fetchTorLists(exitOnly, filename)
 	}
 
-	for {
-		time.Sleep(waitTime)
+	go func() {
+		for {
+			time.Sleep(waitTime)
 
-		fetchTorLists(exitOnly, filename)
-	}
+			fetchTorLists(exitOnly, filename)
+		}
+	}()
 }
 
 func fetchTorLists(exitOnly bool, filename string) {

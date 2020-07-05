@@ -18,7 +18,7 @@ func Init(ExitOnly bool, waitTime time.Duration, filename string) {
 	var useCache bool
 	torIPs, useCache = readCacheFile(filename)
 
-	go startDownloadDaemon(ExitOnly, waitTime, filename, !useCache)
+	startDownloadDaemon(ExitOnly, waitTime, filename, !useCache)
 }
 
 // IsTor checks if an IP address is listed as Tor IP

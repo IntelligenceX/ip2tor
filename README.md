@@ -12,7 +12,13 @@ It was observed that those lists only match about 72%, so they are both used as 
 
 ## Usage
 
-It is a Go package with no external dependencies.
+It is a Go package with no external dependencies. To download it:
+
+```shell
+go get -u github.com/IntelligenceX/ip2tor
+```
+
+Then use it like this:
 
 ```go
 package main
@@ -21,11 +27,13 @@ import (
     "github.com/IntelligenceX/ip2tor"
 )
 
-func main() {
+func init() {
     // Only download exit nodes, refetch the list every 2 hours.
     // Cache it to the file "tor-ips.txt".
     ip2tor.Init(true, time.Hour*2, "tor-ips.txt")
-    
+}
+
+func main() {
     ip := net.ParseIP("1.2.3.4")
 
     ip2tor.IsTor(ip) // returns true or false
