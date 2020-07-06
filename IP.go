@@ -48,12 +48,6 @@ func IsTor(IP net.IP) bool {
 func BlockTorMiddleware(BanStatusCode int, BanPayload []byte) func(http.Handler) http.Handler {
 	return (func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// allow OPTIONS request for better browser experience
-			if r.Method == "OPTIONS" {
-				next.ServeHTTP(w, r)
-				return
-			}
-
 			// parse IP:port
 			host, _, _ := net.SplitHostPort(r.RemoteAddr)
 			hostIP := net.ParseIP(host)
