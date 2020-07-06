@@ -142,3 +142,20 @@ func readCacheFile(filename string) (ipMap map[string]struct{}, valid bool) {
 
 	return ipMap, true
 }
+
+// startFileCacheFetcher starts a Go routine to continuously reload the file cache
+func startFileCacheFetcher(waitTime time.Duration, filename string) {
+	if filename == "" {
+		return
+	}
+
+	go func() {
+		for {
+			time.Sleep(waitTime)
+
+			if ipMap, valid := readCacheFile(filename); valid {
+				torIPs = ipMap
+			}
+		}
+	}()
+}
