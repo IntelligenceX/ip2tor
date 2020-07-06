@@ -8,6 +8,7 @@ package ip2tor
 
 import (
 	"net"
+	"net/http"
 	"time"
 )
 
@@ -41,4 +42,31 @@ func IsTor(IP net.IP) bool {
 	_, ok := torIPs[IP.String()]
 
 	return ok
+}
+
+// BlockTorMiddleware returns a middleware function to be used with mux.Router.Use(). Tor IPs will be denied access.
+func BlockTorMiddleware(BanStatusCode int, BanPayload []byte) func(http.Handler) http.Handler {
+	return (func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// allow OPTIONS request for better browser experience
+			if r.Method == "OPTIONS" {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			// parse IP:port
+			host, _, _ := net.SplitHostPort(r.RemoteAddr)
+			hostIP := net.ParseIP(host)
+
+			// Is Tor?
+			if IsTor(hostIP) {
+				w.WriteHeader(BanStatusCode)
+				w.Write(BanPayload)
+				return
+			}
+
+			next.ServeHTTP(w, r)
+			return
+		})
+	})
 }

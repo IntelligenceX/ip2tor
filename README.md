@@ -30,7 +30,7 @@ import (
 func init() {
     // Only download exit nodes, refetch the list every 2 hours.
     // Cache it to the file "tor-ips.txt".
-    ip2tor.Init(true, time.Hour*2, "tor-ips.txt")
+    ip2tor.Init(1, time.Hour*2, "tor-ips.txt")
 }
 
 func main() {
